@@ -20,7 +20,7 @@ Module.register('MMM-HVV', {
   },
 
   fetchHVV: function () {
-    var endpoint = `https://1.hvv.transport.rest/stations/${this.config.station}/departures?direction=${this.config.direction}&duration=${this.config.maxDepartureTime}`
+    var endpoint = `https://v5.hvv.transport.rest/stops/${this.config.station}/departures?direction=${this.config.direction}&duration=${this.config.maxDepartureTime}`
 
     fetch(endpoint)
       .then(response => {
