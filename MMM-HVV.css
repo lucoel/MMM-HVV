@@ -14,3 +14,17 @@
 #HVV .grayscale {
   filter: grayscale(100%);
 }
+
+#HVV tr {
+  animation: reveal 1s ease;
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

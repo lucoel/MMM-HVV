@@ -29,19 +29,48 @@ Add this to your `config/config.js` file.
             position: 'bottom_left',
             config: {
                 station: Number,
-                direction: Number
             }
         }
     ]
 }
 ```
+### Find your station/stop ID
+> This step is definitely not ideal. Maybe there will be a better solution in the future.
+
+The REST API can [`GET /locations`](https://v5.hvv.transport.rest/api.html#get-locations).
+
+### Example
+```sh
+curl 'https://v5.hvv.transport.rest/locations?query=fischmarkt&results=1' -s | jq
+```
+```json
+[
+  {
+    "type": "stop",
+    "id": "5839",
+    "name": "Fischmarkt",
+    "location": {
+      "type": "location",
+      "id": "5839", // <- this is what you need
+      "latitude": 53.547375,
+      "longitude": 9.950816
+    },
+    "products": {
+      // ...
+    }
+  }
+]
+```
+
+With this method you can of course also search for your (optional) direction ID.
+
 
 ## Configuration Options
 
 | Option | Description | Default |
 | ------------- | ------------- | ------------- |
-| `station`  | **REQUIRED** The station where you want to start. | null |
-| `direction`  | **REQUIRED** The direction you want to use.  | null |
+| `station`  |  The station/stop ID where you want to start | **REQUIRED** |
+| `destination`  | Only show departures for a specific direction/destination ID | null |
 | `maxDepartureTime`  | Maximum time until departure in minutes | 20 |
 | `showIcons`  | Show line icons for every departure | true |
 | `header`  | Custom header text | HVV Departures |
