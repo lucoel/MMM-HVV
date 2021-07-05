@@ -1,13 +1,13 @@
 Module.register('MMM-HVV', {
   defaults: {
     animationSpeed: 1000,
-    station: null,
-    direction: null,
     maxDepartureTime: 20,
+    showIcons: true,
+    header: 'HVV Departures'
   },
 
   start: function () {
-    Log.log('HVV frontend started')
+    Log.log('HVV frontend started. ' + `Departures from station ${this.config.station} to destination ${this.config.destination}.`)
     this.sendSocketNotification('HVV_START')
   },
 
@@ -16,11 +16,12 @@ Module.register('MMM-HVV', {
   },
 
   getScripts: function () {
-    return ["moment.js"]
+    return ['moment.js']
   },
 
   fetchHVV: function () {
-    var endpoint = `https://v5.hvv.transport.rest/stops/${this.config.station}/departures?direction=${this.config.direction}&duration=${this.config.maxDepartureTime}`
+    var destination = this.config.destination ? `&direction=${this.config.destination}` : ``
+    var endpoint = `https://v5.hvv.transport.rest/stops/${this.config.station}/departures?duration=${this.config.maxDepartureTime}${destination}`
 
     fetch(endpoint)
       .then(response => {
@@ -31,8 +32,9 @@ Module.register('MMM-HVV', {
           var line = data[key].line.name
           var direction = data[key].direction
           var when = moment(data[key].when).fromNow()
+          var icon = this.config.showIcons ? `<td class="icon"><img class="grayscale" src="https://cloud.geofox.de/icon/linename?name=${line}&height=20&outlined=true&fileFormat=SVG"/></td>` : ''
           var row = document.createElement('tr')
-          row.innerHTML = `<td class="direction">${direction} (${line})</td><td class="time bright">${when}</td>`
+          row.innerHTML = `<td class="direction">${direction}</td>` + icon + `<td class="time bright">${when}</td>`
           table = document.getElementById('results')
           table.appendChild(row)
         }
@@ -47,7 +49,7 @@ Module.register('MMM-HVV', {
     div.id = "HVV"
 
     var header = document.createElement('header')
-    header.innerHTML = "HVV Abfahrten"
+    header.innerHTML = this.config.header
     div.appendChild(header)
 
     var table = document.createElement('table')
@@ -55,7 +57,12 @@ Module.register('MMM-HVV', {
     table.className = 'small'
     div.appendChild(table)
 
-    this.fetchHVV()
+    if (this.config.station) {
+      this.fetchHVV()
+    } else {
+      table.innerHTML = `<p class="bright">Station/stop is not defined in config.</p>`
+      Log.error(this.name + ': Station not defined in config.')
+    }
 
     return div
   },
