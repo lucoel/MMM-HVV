@@ -1,6 +1,8 @@
 # MMM-HVV 🚇
 MagicMirror Module that displays departure information about public transportation in Hamburg, Germany. It uses [`v5.hvv.transport.rest`](https://v5.hvv.transport.rest/) (also see [hvv-rest](https://github.com/derhuerst/hvv-rest)).
 
+![Preview](.github/preview.png)
+
 ## Installation
 Clone this module into your MagicMirror's `modules` directory and install dependencies:
 
