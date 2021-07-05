@@ -34,6 +34,7 @@ Add this to your `config/config.js` file.
     ]
 }
 ```
+
 ### Find your station/stop ID
 > This step is definitely not ideal. Maybe there will be a better solution in the future.
 
@@ -43,7 +44,7 @@ The REST API can [`GET /locations`](https://v5.hvv.transport.rest/api.html#get-l
 ```sh
 curl 'https://v5.hvv.transport.rest/locations?query=fischmarkt&results=1' -s | jq
 ```
-```json
+```jsonc
 [
   {
     "type": "stop",
