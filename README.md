@@ -42,4 +42,5 @@ Add this to your `config/config.js` file.
 | `direction`  | **REQUIRED** The direction you want to use.  | null |
 | `maxDepartureTime`  | Maximum time until departure in minutes | 20 |
 | `showIcons`  | Show line icons for every departure | true |
+| `header`  | Custom header text | HVV Departures |
 | `animationSpeed`  | Animation speed to display/hide new results. (WIP) | 1000 |

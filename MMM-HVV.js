@@ -4,7 +4,8 @@ Module.register('MMM-HVV', {
     station: null,
     direction: null,
     maxDepartureTime: 20,
-    showIcons: true
+    showIcons: true,
+    header: 'HVV Departures'
   },
 
   start: function () {
@@ -17,7 +18,7 @@ Module.register('MMM-HVV', {
   },
 
   getScripts: function () {
-    return ["moment.js"]
+    return ['moment.js']
   },
 
   fetchHVV: function () {
@@ -32,7 +33,7 @@ Module.register('MMM-HVV', {
           var line = data[key].line.name
           var direction = data[key].direction
           var when = moment(data[key].when).fromNow()
-          var icon = this.config.showIcons ? `<td><img class="icon grayscale" src="https://cloud.geofox.de/icon/linename?name=${line}&height=20&fileFormat=SVG"/></td>` : ''
+          var icon = this.config.showIcons ? `<td class="icon"><img class="grayscale" src="https://cloud.geofox.de/icon/linename?name=${line}&height=20&fileFormat=SVG"/></td>` : ''
           var row = document.createElement('tr')
           row.innerHTML = `<td class="direction">${direction}</td>` + icon + `<td class="time bright">${when}</td>`
           table = document.getElementById('results')
@@ -49,7 +50,7 @@ Module.register('MMM-HVV', {
     div.id = "HVV"
 
     var header = document.createElement('header')
-    header.innerHTML = "HVV Abfahrten"
+    header.innerHTML = this.config.header
     div.appendChild(header)
 
     var table = document.createElement('table')
