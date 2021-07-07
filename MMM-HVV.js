@@ -45,7 +45,7 @@ Module.register('MMM-HVV', {
             `<td class="direction">${direction}</td>` +
             icon +
             `<td class="time bright">${when}</td>`;
-          table = document.getElementById('results');
+          var table = document.getElementById('results');
           table.appendChild(row);
         }
       })
