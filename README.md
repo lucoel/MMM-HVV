@@ -4,7 +4,7 @@ MagicMirror Module that displays departure information about public transportati
 
 ### Update
 
-`hvv-rest` was deprecated. Even though I'm not personally using MagicMirror anymore, I updated the endpoint to [`db-rest`](https://v6.db.transport.rest/) to make this module somewhat working again but I'm not planning to implement anything new. But feel to contribute your ideas!
+`hvv-rest` was deprecated. Even though I'm not personally using MagicMirror anymore, I updated the endpoint to [`db-rest`](https://v6.db.transport.rest/) to make this module somewhat working again but I'm not _planning_ to implement anything new. But feel to share or contribute your ideas!
 
 ![Preview](.github/preview.png)
 
@@ -38,7 +38,7 @@ Add this to your MagicMirror `config.js` file:
 
 ### Find your station/stop ID
 
-The REST API can [`GET /locations`](https://v6.db.transport.rest/).
+Using the REST API you can [`GET /locations`](https://v6.db.transport.rest/).
 
 ### Example
 
