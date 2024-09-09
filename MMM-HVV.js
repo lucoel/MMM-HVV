@@ -59,6 +59,11 @@ Module.register('MMM-HVV', {
     const div = document.createElement('div')
     div.id = "HVV"
 
+    if (!this.config.station) {
+      div.innerHTML = `<p class="bright">Station/stop is not defined in config.</p>`
+      Log.error(`${this.name}: Station not defined in config.`);
+    }
+
     const header = document.createElement('header')
     header.innerHTML = this.config.header
     div.appendChild(header)
@@ -68,21 +73,14 @@ Module.register('MMM-HVV', {
     table.className = 'small'
     div.appendChild(table)
 
-    if (this.config.station) {
-      this.fetchHVV()
-    } else {
-      table.innerHTML = `<p class="bright">Station/stop is not defined in config.</p>`
-      Log.error(this.name + ': Station not defined in config.')
-    }
+    this.fetchHVV()
 
     return div
   },
 
   notificationReceived: function (notification) {
-    var self = this
-
     if (notification === 'CLOCK_MINUTE') {
-      self.updateDom()
+      this.updateDom()
       Log.info('New HVV departures available.')
     }
   },
