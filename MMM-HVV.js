@@ -18,49 +18,52 @@ Module.register('MMM-HVV', {
 		return ["moment.js"];
 	},
 
-  fetchHVV: function () {
-    var destination = this.config.destination ? `&direction=${this.config.destination}` : ''
-    var endpoint = `https://v6.db.transport.rest/stops/${this.config.station}/departures?duration=${this.config.maxDepartureTime}&remarks=false${destination}`
+  fetchHVV: async function () {
+    try {
+      const destination = this.config.destination ? `&direction=${this.config.destination}` : ''
+      const endpoint = `https://v6.db.transport.rest/stops/${this.config.station}/departures?duration=${this.config.maxDepartureTime}&remarks=false${destination}`
 
+      const response = await fetch(endpoint);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-    fetch(endpoint)
-      .then(response => {
-        return response.json()
+      const data = await response.json();
+
+      Object.keys(data).forEach(key => {
+        data[key].forEach(departure => {
+          const direction = departure.direction
+          const when = moment(departure.when).fromNow()
+
+          let line = departure.line.name.replaceAll(' ','')
+          if (line.includes("Bus")) {
+            line = line.replaceAll("Bus", "")
+          }
+          const icon = this.config.showIcons
+            ? `<td class="icon"><img class="grayscale" src="https://cloud.geofox.de/icon/linename?name=${line}&height=20&outlined=true&fileFormat=SVG"/></td>`
+            : '';
+
+          const row = document.createElement('tr')
+
+          row.innerHTML = `<td class="direction">${direction}</td>` + icon + `<td class="time bright">${when}</td> `
+          table = document.getElementById('results')
+          table.appendChild(row)
+        })
       })
-      .then(data => {
-        for (var key in data) {
-          data[key].forEach(departure => {
-            var direction = departure.direction
-            var when = moment(departure.when).fromNow()
-
-            var line = departure.line.name.replaceAll(' ','')
-            if (line.includes("Bus")) {
-              line = line.replaceAll("Bus", "")
-            }
-            var icon = this.config.showIcons ? `<td class="icon"><img class="grayscale" src="https://cloud.geofox.de/icon/linename?name=${line}&height=20&outlined=true&fileFormat=SVG"/></td>` : ''
-
-            var row = document.createElement('tr')
-
-            row.innerHTML = `<td class="direction">${direction}</td>` + icon + `<td class="time bright">${when}</td> `
-            table = document.getElementById('results')
-            table.appendChild(row)
-          });
-        }
-      })
-      .catch(error => {
-        Log.error(this.name + ': Something went wrong. Please check modules config. ' + error)
-      })
+    } catch (error) {
+      Log.error(`${this.name}: Something went wrong. Please check module's config. ${error}`);
+    }
   },
 
   getDom: function () {
-    var div = document.createElement('div')
+    const div = document.createElement('div')
     div.id = "HVV"
 
-    var header = document.createElement('header')
+    const header = document.createElement('header')
     header.innerHTML = this.config.header
     div.appendChild(header)
 
-    var table = document.createElement('table')
+    const table = document.createElement('table')
     table.id = 'results'
     table.className = 'small'
     div.appendChild(table)
