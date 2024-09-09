@@ -1,78 +1,78 @@
 # MMM-HVV 🚇
-MagicMirror Module that displays departure information about public transportation in Hamburg, Germany. It uses [`v5.hvv.transport.rest`](https://v5.hvv.transport.rest/) (also see [hvv-rest](https://github.com/derhuerst/hvv-rest)).
+
+MagicMirror Module that displays departure information about public transportation in Hamburg, Germany. ~~It uses [`v5.hvv.transport.rest`](https://v5.hvv.transport.rest/) (also see [hvv-rest](https://github.com/derhuerst/hvv-rest)).~~
+
+### Update
+
+`hvv-rest` was deprecated. Even though I'm not personally using MagicMirror anymore, I updated the endpoint to [`db-rest`](https://v6.db.transport.rest/) to make this module somewhat working again but I'm not _planning_ to implement anything new. But feel to share or contribute your ideas!
 
 ![Preview](.github/preview.png)
 
 ## Installation
-Clone this module into your MagicMirror's `modules` directory and install dependencies:
+
+Clone this module into your MagicMirror's `modules` directory:
 
 ```sh
 cd modules
 git clone https://github.com/lucoel/MMM-HVV
 ```
 
-Now make changes to your `config.js` file.
-
 ## How to use this module
-Add this to your `config/config.js` file.
+
+Add this to your MagicMirror `config.js` file:
 
 ```javascript
 {
-    /* ...your other config */
-
-    modules: [
-
-        /* ...your other modules */
-
-        {
-            module: 'MMM-HVV',
-            position: 'bottom_left',
-            config: {
-                station: Number,
-            }
-        }
-    ]
+  /* ...your other config */
+  modules: [
+    {
+      module: "MMM-HVV",
+      position: "bottom_left",
+      config: {
+        station: Number
+      }
+    }
+  ];
 }
 ```
 
 ### Find your station/stop ID
-> This step is definitely not ideal. Maybe there will be a better solution in the future.
 
-The REST API can [`GET /locations`](https://v5.hvv.transport.rest/api.html#get-locations).
+Using the REST API you can [`GET /locations`](https://v6.db.transport.rest/).
 
 ### Example
+
 ```sh
-curl 'https://v5.hvv.transport.rest/locations?query=fischmarkt&results=1' -s | jq
+curl 'https://v6.db.transport.rest/locations?query=Feldstraße,Hamburg&results=1' -s | jq
 ```
+
 ```jsonc
 [
   {
-    "type": "stop",
-    "id": "5839",
-    "name": "Fischmarkt",
+    "type": "station",
+    "id": "694779",
+    "name": "Feldstraße (Heiligengeistfeld), Hamburg",
     "location": {
       "type": "location",
-      "id": "5839", // <- this is what you need
-      "latitude": 53.547375,
-      "longitude": 9.950816
+      "id": "694779",
+      "latitude": 53.556976,
+      "longitude": 9.968714
     },
     "products": {
-      // ...
+      // …
     }
   }
 ]
 ```
 
-With this method you can of course also search for your (optional) direction ID.
+With this method you can also search for the (optional) direction ID.
 
+## Configuration options
 
-## Configuration Options
-
-| Option | Description | Default |
-| ------------- | ------------- | ------------- |
-| `station`  |  The station/stop ID where you want to start | **REQUIRED** |
-| `destination`  | Only show departures for a specific direction/destination ID | null |
-| `maxDepartureTime`  | Maximum time until departure in minutes | 20 |
-| `showIcons`  | Show line icons for every departure | true |
-| `header`  | Custom header text | HVV Departures |
-| `animationSpeed`  | Animation speed to display/hide new results. (WIP) | 1000 |
+| Option                 | Description                                                  | Default        |
+| ---------------------- | ------------------------------------------------------------ | -------------- |
+| `station` **required** | The station/stop ID where you want to start                  | undefined      |
+| `destination`          | Only show departures for a specific direction/destination ID | undefined      |
+| `maxDepartureTime`     | Maximum time until departure in minutes                      | `20`           |
+| `showIcons`            | Show line icons for every departure                          | `true`         |
+| `header`               | Custom header text                                           | HVV Departures |
