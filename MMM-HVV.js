@@ -15,13 +15,14 @@ Module.register('MMM-HVV', {
     return ['MMM-HVV.css']
   },
 
-  getScripts: function () {
-    return ['moment.js']
-  },
+  getScripts () {
+		return ["moment.js"];
+	},
 
   fetchHVV: function () {
-    var destination = this.config.destination ? `&direction=${this.config.destination}` : ``
-    var endpoint = `https://v5.hvv.transport.rest/stops/${this.config.station}/departures?duration=${this.config.maxDepartureTime}${destination}`
+    var destination = this.config.destination ? `&direction=${this.config.destination}` : ''
+    var endpoint = `https://v6.db.transport.rest/stops/${this.config.station}/departures?duration=${this.config.maxDepartureTime}&remarks=false${destination}`
+
 
     fetch(endpoint)
       .then(response => {
@@ -29,14 +30,22 @@ Module.register('MMM-HVV', {
       })
       .then(data => {
         for (var key in data) {
-          var line = data[key].line.name
-          var direction = data[key].direction
-          var when = moment(data[key].when).fromNow()
-          var icon = this.config.showIcons ? `<td class="icon"><img class="grayscale" src="https://cloud.geofox.de/icon/linename?name=${line}&height=20&outlined=true&fileFormat=SVG"/></td>` : ''
-          var row = document.createElement('tr')
-          row.innerHTML = `<td class="direction">${direction}</td>` + icon + `<td class="time bright">${when}</td>`
-          table = document.getElementById('results')
-          table.appendChild(row)
+          data[key].forEach(departure => {
+            var direction = departure.direction
+            var when = moment(departure.when).fromNow()
+
+            var line = departure.line.name.replaceAll(' ','')
+            if (line.includes("Bus")) {
+              line = line.replaceAll("Bus", "")
+            }
+            var icon = this.config.showIcons ? `<td class="icon"><img class="grayscale" src="https://cloud.geofox.de/icon/linename?name=${line}&height=20&outlined=true&fileFormat=SVG"/></td>` : ''
+
+            var row = document.createElement('tr')
+
+            row.innerHTML = `<td class="direction">${direction}</td>` + icon + `<td class="time bright">${when}</td> `
+            table = document.getElementById('results')
+            table.appendChild(row)
+          });
         }
       })
       .catch(error => {
