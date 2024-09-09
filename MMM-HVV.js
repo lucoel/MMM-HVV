@@ -1,6 +1,5 @@
 Module.register('MMM-HVV', {
   defaults: {
-    animationSpeed: 1000,
     maxDepartureTime: 20,
     showIcons: true,
     header: 'HVV Departures'
